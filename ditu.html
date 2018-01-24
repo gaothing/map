@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        body, html {width: 100%;height: 100%;margin:0;font-family:"微软雅黑";}
+        #allmap{width:100%;height:100%;}
+        p{margin-left:5px; font-size:14px;}
+        .kuang{
+            width: 100%;
+            height:50px;
+            float: left;
+            line-height: 50px;
+            text-align: center;
+        }
+        .kuang:after{
+            content: "";
+            clear: both;
+        }
+        .kuang_left{
+            float: left;
+            width: 50%;
+            height:100%;
+            background: red;
+
+        }
+        .kuang_right{
+            float: right;
+            width: 50%;
+            height:100%;
+        }
+        .xinxi{
+            width:100%;
+            height: auto;
+            position: relative;
+            float: left;
+        }
+        .xinxi1{
+            position: absolute;
+            left: 0;
+            top:0;
+            width: 100%;
+        }
+        .xinxia_cr{
+            z-index: 1;
+            background: #fff;
+            display: block;
+        }
+        .xinxib_cr{
+            background: #fff;
+            display: none;
+        }
+    </style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=YxmIolMnZ93IjwG7DeNgNjwxAkLoKGzz"></script>
+    <script src="js/jquery-1.11.3.js"></script>
+    <title>地图</title>
+</head>
+<body>
+<div id="allmap"></div>
+</body>
+</html>
+<script type="text/javascript">
+    // 百度地图API功能
+    var json_data = [
+        [
+            108.953437,
+            34.265714,
+            "西安钟楼位于西安市中心，明城墙内东西南北四条大街的交汇处，是中国现存钟楼中形制最大、保存最完整的一座...",
+            "钟楼历史文化有限公司",
+            "img/zhonglou.jpg"
+        ],
+        [
+            108.970604,
+            34.224541,
+            '大雁塔位于唐长安城晋昌坊（今陕西省西安市南）的大慈恩寺内，又名“慈恩寺塔...”',
+            "大雁塔历史文化有限公司",
+            "img/dayanta.jpg"
+        ]
+    ];
+    
+    var sContents=[];
+     var pts=[];
+     var markers=[];
+     var infoWindows=[];
+    json_data.forEach(function(v,i){
+    	var htmlStr=
+    	"<h4 style='margin:0 0 5px 0;padding:0.2em 0'>"+json_data[i][3]+"</h4>" +
+        "<img style='float:right;margin:4px' id='imgDemo"+i+"' src='"+json_data[i][4]+"' width='139' height='104' title='"+json_data[0][3]+"'/>" +
+        "<p style='margin:0;line-height:1.5;font-size:13px;text-indent:2em'>"+json_data[i][2]+"</p>" +
+        "<div class='kuang'><div class='kuang_left'>公司基本信息</div><div class='kuang_right'>曲线图</div> </div>"+
+        "<div class='xinxi'><div class='xinxi1 xinxia_cr xinxia_on'>"+json_data[i][2]+"</div><div class='xinxi1 xinxib_cr xinxib_on'>sdkjhasjdksahdka</div></div>"+
+        "</div>";
+        var ptStr=new BMap.Point(json_data[i][0], json_data[i][1]);
+        var markerStr=new BMap.Marker(ptStr,{icon:new BMap.Icon("img/biaozhu.png", new BMap.Size(75,105))}); 
+        var infoWindowStr=new BMap.InfoWindow(htmlStr)
+        sContents.push(htmlStr)
+        pts.push(ptStr)
+        markers.push(markerStr)
+        infoWindows.push(infoWindowStr)
+    })
+//  var sContent2 =//钟楼
+//      "<h4 style='margin:0 0 5px 0;padding:0.2em 0'>"+json_data[0][3]+"</h4>" +
+//      "<img style='float:right;margin:4px' id='imgDemo2' src='"+json_data[0][4]+"' width='139' height='104' title='"+json_data[0][3]+"'/>" +
+//      "<p style='margin:0;line-height:1.5;font-size:13px;text-indent:2em'>"+json_data[0][2]+"</p>" +
+//      "<div class='kuang'><div class='kuang_left'>公司基本信息</div><div class='kuang_right'>曲线图</div> </div>"+
+//      "<div class='xinxi'><div class='xinxi1 xinxia_cr xinxia_on'>"+json_data[0][2]+"</div><div class='xinxi1 xinxib_cr xinxib_on'>sdkjhasjdksahdka</div></div>"+
+//      "</div>";
+//  var sContent1 =//大雁塔
+//      "<h4 style='margin:0 0 5px 0;padding:0.2em 0'>"+json_data[1][3]+"</h4>" +
+//      "<img style='float:right;margin:4px' id='imgDemo1' src='"+json_data[1][4]+"' width='139' height='104' title='"+json_data[1][3]+"'/>" +
+//      "<p style='margin:0;line-height:1.5;font-size:13px;text-indent:2em'>"+json_data[1][2]+"</p>" +
+//      "<div class='kuang'><div class='kuang_left'>公司基本信息</div><div class='kuang_right'>曲线图</div> </div>"+
+//      "<div class='xinxi'><div class='xinxi1 xinxia_cr xinxia_on'>"+json_data[1][2]+"</div><div class='xinxi1 xinxib_cr xinxib_on'>sdkjhasjdksahdka</div></div>"+
+//      "</div>";
+    //*****************************************************************************************************************************
+    //创建标注添加图标
+  
+    
+    var pt2 = new BMap.Point(json_data[0][0], json_data[0][1]);  //钟楼设置坐标
+    var myIcon2 = new BMap.Icon("img/biaozhu.png", new BMap.Size(75,105));  //放入图片设置偏移量
+    var marker2 = new BMap.Marker(pt2,{icon:myIcon2});             //将标注图放到指定的坐标（钟楼）
+//    var marker2 = new BMap.Marker(new BMap.Point(json_data[0][0], json_data[0][1]));  //建立默认样式的标注（钟楼）
+//    var marker1 = new BMap.Marker(new BMap.Point(json_data[1][0], json_data[1][1]));   //建立默认样式的标注（大雁塔）
+    var pt1 = new BMap.Point(json_data[1][0], json_data[1][1]);   //大雁塔设置坐标
+    var myIcon1 = new BMap.Icon("img/biaozhu1.png", new BMap.Size(45,101));   //放入图片设置偏移量
+    var marker1 = new BMap.Marker(pt1,{icon:myIcon1});            //将标注图放到指定的坐标（大雁塔）
+    
+    
+    var map = new BMap.Map("allmap");                           //创建Map（地图）实例
+    var point = new BMap.Point(108.93, 34.27);                      //设置所找城市经纬度
+    var marker = new BMap.Marker(point);     
+    
+    //创建标注
+//  var infoWindow2 = new BMap.InfoWindow(sContent2);  // 创建信息窗口对象 钟楼
+//  var infoWindow1 = new BMap.InfoWindow(sContent1);  // 创建信息窗口对象 大雁塔
+    
+    
+    map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
+    map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+    map.centerAndZoom("西安",11);        // 初始化地图,用城市名设置地图中心点并设置地图级别（11 全市）
+//    map.centerAndZoom(point, 15);       // 初始化地图,用城市名设置地图中心点并设置地图级别（15 可以看到区的）
+    map.setCurrentCity("西安");          // 设置地图显示的城市 此项是必须设置的
+    
+//  map.addOverlay(marker2);   //定位钟楼
+//  map.addOverlay(marker1);  //定位大雁塔
+    //大雁塔标注点击设置信息框
+    
+    
+    markers.forEach(function(v,i){
+    	 map.addOverlay(v)
+    	v.addEventListener("click", function(){
+        this.openInfoWindow(infoWindows[i]);
+        //图片加载完毕重绘infowindow
+        document.getElementById('imgDemo'+i).onload = function (){
+            infoWindows[i].redraw();   //防止在网速较慢，图片未加载时，生成的信息框高度比图片的总高度小，导致图片部分被隐藏
+        }
+        var kuang_left=$('.kuang_left');  //获取左点击按钮
+        var kuang_right=$('.kuang_right'); //获取右点击按钮
+        var xinxia_on=$('.xinxia_on');   //获取左点击按钮的选项卡
+        var xinxib_on=$('.xinxib_on');   //获取左点击按钮的选项卡
+        kuang_left.on('click',function () {
+            kuang_left.css('background','red');
+            kuang_right.css('background','#fff');
+            xinxia_on.css({"z-index":"10",'display':'block'});
+            xinxib_on.css({'z-index':'1','display':'none'});
+        });
+        kuang_right.on('click',function () {
+            kuang_right.css('background','red');
+            kuang_left.css('background','#fff');
+            xinxib_on.css({"z-index":"10",'display':'block'});
+            xinxia_on.css({'z-index':'1','display':'none'});
+        });
+    });
+    })
+    
+    
+    
+//  marker1.addEventListener("click", function(){
+//      this.openInfoWindow(infoWindow1);
+//      //图片加载完毕重绘infowindow
+//      document.getElementById('imgDemo1').onload = function (){
+//          infoWindow1.redraw();   //防止在网速较慢，图片未加载时，生成的信息框高度比图片的总高度小，导致图片部分被隐藏
+//      }
+//      var kuang_left=$('.kuang_left');  //获取左点击按钮
+//      var kuang_right=$('.kuang_right'); //获取右点击按钮
+//      var xinxia_on=$('.xinxia_on');   //获取左点击按钮的选项卡
+//      var xinxib_on=$('.xinxib_on');   //获取左点击按钮的选项卡
+//      kuang_left.on('click',function () {
+//          kuang_left.css('background','red');
+//          kuang_right.css('background','#fff');
+//          xinxia_on.css({"z-index":"10",'display':'block'});
+//          xinxib_on.css({'z-index':'1','display':'none'});
+//      });
+//      kuang_right.on('click',function () {
+//          kuang_right.css('background','red');
+//          kuang_left.css('background','#fff');
+//          xinxib_on.css({"z-index":"10",'display':'block'});
+//          xinxia_on.css({'z-index':'1','display':'none'});
+//      });
+//  });
+    //钟楼标注点击设置信息框
+//  marker2.addEventListener("click", function(){
+//      this.openInfoWindow(infoWindow2);
+//      //图片加载完毕重绘infowindow
+//      document.getElementById('imgDemo2').onload = function (){
+//          infoWindow2.redraw();   //防止在网速较慢，图片未加载时，生成的信息框高度比图片的总高度小，导致图片部分被隐藏
+//      }
+//      var kuang_left=$('.kuang_left');var kuang_right=$('.kuang_right');var xinxia_on=$('.xinxia_on');var xinxib_on=$('.xinxib_on');
+//      kuang_left.on('click',function () {
+//          kuang_left.css('background','red');
+//          kuang_right.css('background','#fff');
+//          xinxia_on.css({"z-index":"10",'display':'block'});
+//          xinxib_on.css({'z-index':'1','display':'none'});
+//      });
+//      kuang_right.on('click',function () {
+//          kuang_right.css('background','red');
+//          kuang_left.css('background','#fff');
+//          xinxib_on.css({"z-index":"10",'display':'block'});
+//          xinxia_on.css({'z-index':'1','display':'none'});
+//      });
+//  });
+//----------------------------------------------------------------------------------------------------------------------
+    var top_left_control = new BMap.ScaleControl({anchor: BMAP_ANCHOR_TOP_LEFT});// 左上角，添加比例尺
+    var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
+//    var top_right_navigation = new BMap.NavigationControl({anchor: BMAP_ANCHOR_TOP_RIGHT, type: BMAP_NAVIGATION_CONTROL_SMALL}); //右上角，仅包含平移和缩放按钮
+    /*缩放控件type有四种类型:
+    BMAP_NAVIGATION_CONTROL_SMALL：仅包含平移和缩放按钮；BMAP_NAVIGATION_CONTROL_PAN:仅包含平移按钮；BMAP_NAVIGATION_CONTROL_ZOOM：仅包含缩放按钮*/
+
+    //添加控件和比例尺
+    map.addControl(top_left_control);
+    map.addControl(top_left_navigation);
+    map.addControl(top_right_navigation);
+
+
+</script>
